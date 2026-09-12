@@ -1,0 +1,18 @@
+(() => {
+'use strict';
+const STORE='kejian-timetable-v1';
+const MIGRATION_FLAG='kejian-v5-firstday-20260831';
+const FIRST_DAY='2026-08-31';
+const DEFAULT_TIMES=[['08:00','08:45'],['08:55','09:40'],['10:00','10:45'],['10:55','11:40'],['14:00','14:45'],['14:55','15:40'],['16:00','16:45'],['16:55','17:40'],['19:00','19:45'],['19:55','20:40'],['21:00','21:45'],['21:55','22:40']];
+const $=s=>document.querySelector(s);
+function uid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+function readState(){try{return JSON.parse(localStorage.getItem(STORE))}catch(e){return null}}
+function writeState(state){localStorage.setItem(STORE,JSON.stringify(state))}
+function blankBoard(name='我的课表'){return{id:uid(),name,firstDay:FIRST_DAY,termWeeks:20,maxSections:12,showWeekend:true,showOtherWeeks:false,reminder:true,times:DEFAULT_TIMES.map(x=>[...x]),courses:[]}}
+function migrateFirstDay(){if(localStorage.getItem(MIGRATION_FLAG)==='1')return false;const state=readState();if(!state?.boards?.length){localStorage.setItem(MIGRATION_FLAG,'1');return false}const active=state.boards.find(b=>b.id===state.activeBoardId)||state.boards[0];let changed=false;if(active&&active.firstDay!==FIRST_DAY){active.firstDay=FIRST_DAY;changed=true}localStorage.setItem(MIGRATION_FLAG,'1');if(changed)writeState(state);return changed}
+function bindVersionInfo(){const button=$('#versionInfoButton'),dialog=$('#versionDialog');if(button&&dialog)button.onclick=()=>{document.querySelector('#boardPanel')?.classList.remove('open');const scrim=$('#scrim');if(scrim)scrim.hidden=true;dialog.showModal()}}
+function bindDeleteBoard(){const button=$('#deleteBoardButton');if(!button)return;button.onclick=()=>{const state=readState();if(!state?.boards?.length)return;const current=state.boards.find(b=>b.id===state.activeBoardId)||state.boards[0];const name=current?.name||'当前课表';const ok=confirm(`确定删除整个课表“${name}”？\n\n该课表中的全部课程、周次和设置都会从这台设备删除。此操作无法撤销。`);if(!ok)return;state.boards=state.boards.filter(b=>b.id!==current.id);if(!state.boards.length){const fresh=blankBoard();state.boards=[fresh];state.activeBoardId=fresh.id}else{state.activeBoardId=state.boards[0].id}writeState(state);location.reload()}}
+function bindNewBoardDefault(){const form=$('#newBoardForm');if(!form)return;form.addEventListener('submit',e=>{if(e.submitter?.value==='cancel')return;setTimeout(()=>{const state=readState();if(!state?.boards?.length)return;const active=state.boards.find(b=>b.id===state.activeBoardId)||state.boards[state.boards.length-1];if(active&&active.firstDay!==FIRST_DAY){active.firstDay=FIRST_DAY;writeState(state);location.reload()}},0)})}
+bindVersionInfo();bindDeleteBoard();bindNewBoardDefault();
+if(migrateFirstDay())setTimeout(()=>location.reload(),0);
+})();
