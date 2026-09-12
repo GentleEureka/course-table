@@ -1,0 +1,13 @@
+(() => {
+'use strict';
+const STORE='kejian-timetable-v1';
+const $=s=>document.querySelector(s);
+function readState(){try{return JSON.parse(localStorage.getItem(STORE))}catch(e){return null}}
+function writeState(state){localStorage.setItem(STORE,JSON.stringify(state))}
+function activeBoard(state){return state?.boards?.find(b=>b.id===state.activeBoardId)||state?.boards?.[0]||null}
+function appendTimeRow(index,tm=['','']){const ed=$('#timeEditor');if(!ed)return;const r=document.createElement('div');r.className='time-row';r.innerHTML=`<b>${index+1}</b><input type="time" data-i="${index}" data-k="0" value="${tm[0]||''}"><input type="time" data-i="${index}" data-k="1" value="${tm[1]||''}">`;ed.append(r)}
+function refreshSlotOptions(max){document.querySelectorAll('.slot-start,.slot-end').forEach(select=>{const current=select.value;const have=new Set([...select.options].map(o=>+o.value));for(let i=1;i<=max;i++)if(!have.has(i))select.add(new Option(String(i),String(i)));select.value=current})}
+function appendScheduleRow(section,b){const schedule=$('#schedule');if(!schedule)return;const compact=matchMedia('(max-width:720px)').matches;const days=b.showWeekend?7:5;schedule.style.gridTemplateRows=compact?`30px repeat(${section},minmax(0,1fr))`:`46px repeat(${section},76px)`;if([...schedule.children].some(node=>{const row=parseInt(node.style.gridRowStart||node.style.gridRow,10);return row===section+1&&node.classList.contains('time-cell')}))return;const tm=b.times?.[section-1]||['',''];const time=document.createElement('div');time.className='grid-cell time-cell';time.style.gridColumn='1';time.style.gridRow=String(section+1);time.innerHTML=`<b>${section}</b>${tm[0]?`<span>${tm[0]}</span>`:''}${tm[1]?`<span>${tm[1]}</span>`:''}`;schedule.append(time);for(let d=1;d<=days;d++){const cell=document.createElement('div');cell.className='grid-cell';cell.style.gridColumn=String(d+1);cell.style.gridRow=String(section+1);schedule.append(cell)}}
+function bindAddSection(){const button=$('#addSectionButton');if(!button)return;button.onclick=e=>{e.preventDefault();e.stopPropagation();const state=readState();const b=activeBoard(state);if(!b)return;const ed=$('#timeEditor');const current=Math.max(12,+b.maxSections||12,ed?.children.length||0);const next=current+1;b.maxSections=next;b.times=Array.isArray(b.times)?b.times:[];while(b.times.length<next)b.times.push(['','']);writeState(state);if(ed){while(ed.children.length<next){const i=ed.children.length;appendTimeRow(i,b.times[i]||['',''])}ed.lastElementChild?.scrollIntoView({block:'nearest',behavior:'smooth'})}refreshSlotOptions(next);appendScheduleRow(next,b)}}
+bindAddSection();
+})();
