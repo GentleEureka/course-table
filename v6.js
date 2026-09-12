@@ -49,6 +49,7 @@ function bindRenameBoard(){
     location.reload();
   };
 }
+function loadV7Fixes(){if(document.querySelector('script[data-kejian-v7]'))return;const script=document.createElement('script');script.src='./v7.js';script.dataset.kejianV7='1';document.body.append(script)}
 bindRenameBoard();
 installFontScaleSetting();
 bindSyncFontScale();
@@ -56,4 +57,5 @@ bindBoardFontRefresh();
 bindSessionGaps();
 bindPanelScrollLock();
 applySavedFontScale();
+loadV7Fixes();
 })();
