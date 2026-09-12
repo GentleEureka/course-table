@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kejian-pwa-v5-13';
+const CACHE_NAME = 'kejian-pwa-v5-14';
 const APP_SHELL = ['./','./index.html','./style.css','./theme.css','./course-density.css','./importers.js','./appearance.js','./app.js','./v5.js','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
 const ASSET_DB='kejian-assets-v1', ASSET_STORE='assets';
 const CUSTOM_ICONS={
