@@ -27,6 +27,9 @@ $('#settingsDialog')?.addEventListener('close',applySavedFontScale);
 function patchSyncCode(){setTimeout(()=>{const box=$('#syncCode');if(!box?.value)return;try{const obj=JSON.parse(decodeURIComponent(escape(atob(box.value.trim()))));if(!obj?.board)return;obj.board.cardFontScale=currentScale();box.value=btoa(unescape(encodeURIComponent(JSON.stringify(obj))))}catch(e){}},0)}
 function bindSyncFontScale(){const share=$('#shareBoardButton');if(share)share.addEventListener('click',patchSyncCode);const form=$('#codeForm');if(form)form.addEventListener('submit',()=>setTimeout(()=>{syncFontMapFromState();applySavedFontScale()},20))}
 function bindBoardFontRefresh(){const list=$('#boardList');if(list)new MutationObserver(()=>applySavedFontScale()).observe(list,{childList:true});window.addEventListener('resize',applySavedFontScale)}
+function rowStart(node){const direct=parseInt(node.style.gridRowStart,10);if(Number.isFinite(direct))return direct;const m=(node.style.gridRow||'').match(/^\s*(\d+)/);return m?+m[1]:0}
+function applySessionGaps(){const schedule=$('#schedule');if(!schedule)return;for(const node of schedule.children){node.classList.remove('session-gap-top');const row=rowStart(node);if(row===6||row===10)node.classList.add('session-gap-top')}}
+function bindSessionGaps(){const schedule=$('#schedule');if(!schedule)return;new MutationObserver(()=>queueMicrotask(applySessionGaps)).observe(schedule,{childList:true});applySessionGaps()}
 function bindRenameBoard(){
   const button=$('#renameBoardButton');
   if(!button)return;
@@ -48,5 +51,6 @@ bindRenameBoard();
 installFontScaleSetting();
 bindSyncFontScale();
 bindBoardFontRefresh();
+bindSessionGaps();
 applySavedFontScale();
 })();
