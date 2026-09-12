@@ -1,7 +1,7 @@
 {
   "name": "课间 · 课程表",
   "short_name": "课间",
-  "description": "离线优先的大学课程表，支持烟台大学 URP 选课结果 HTML 导入。",
+  "description": "离线优先的大学课程表，支持烟台大学 URP 与杭州医学院正方教务 HTML 导入。",
   "lang": "zh-CN",
   "start_url": "./",
   "scope": "./",
