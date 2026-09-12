@@ -30,6 +30,8 @@ function bindBoardFontRefresh(){const list=$('#boardList');if(list)new MutationO
 function rowStart(node){const direct=parseInt(node.style.gridRowStart,10);if(Number.isFinite(direct))return direct;const m=(node.style.gridRow||'').match(/^\s*(\d+)/);return m?+m[1]:0}
 function applySessionGaps(){const schedule=$('#schedule');if(!schedule)return;for(const node of schedule.children){node.classList.remove('session-gap-top');const row=rowStart(node);if(row===6||row===10)node.classList.add('session-gap-top')}}
 function bindSessionGaps(){const schedule=$('#schedule');if(!schedule)return;new MutationObserver(()=>queueMicrotask(applySessionGaps)).observe(schedule,{childList:true});applySessionGaps()}
+function syncPanelOpenState(){const panel=$('#boardPanel');const open=!!panel?.classList.contains('open');document.documentElement.classList.toggle('panel-open',open);document.body.classList.toggle('panel-open',open)}
+function bindPanelScrollLock(){const panel=$('#boardPanel');if(!panel)return;new MutationObserver(syncPanelOpenState).observe(panel,{attributes:true,attributeFilter:['class']});document.addEventListener('touchmove',e=>{if(!panel.classList.contains('open'))return;if(!panel.contains(e.target))e.preventDefault()},{passive:false,capture:true});panel.addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});syncPanelOpenState()}
 function bindRenameBoard(){
   const button=$('#renameBoardButton');
   if(!button)return;
@@ -52,5 +54,6 @@ installFontScaleSetting();
 bindSyncFontScale();
 bindBoardFontRefresh();
 bindSessionGaps();
+bindPanelScrollLock();
 applySavedFontScale();
 })();
