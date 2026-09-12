@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
 <link rel="stylesheet" href="style.css" />
-<title>课间 · 课程表 v5</title>
+<title>课间 · 课程表 v6</title>
 </head>
 <body>
 <main class="app-shell">
@@ -27,6 +27,7 @@
 <div class="panel-heading"><span>我的课表</span><button class="plain-button" id="closePanel">关闭</button></div>
 <div id="boardList" class="board-list"></div>
 <button class="wide-action primary" id="newBoardButton"><span class="side-action-content"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>新建课表</span></span></button>
+<button class="wide-action" id="renameBoardButton">重命名课表</button>
 <button class="wide-action" id="deleteBoardButton" style="color:#b42318;border-color:#efb7b1;background:#fff7f6"><span class="side-action-content"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 10v6M14 10v6"/></svg><span>删除此课表</span></span></button>
 <button class="wide-action" id="manageCoursesButton">管理已添加课程</button>
 <div class="panel-section">数据</div>
@@ -38,7 +39,7 @@
 <button class="wide-action" id="clearBackgroundButton">清除课表背景</button>
 <button class="wide-action" id="homeIconButton">更换手机桌面图标</button>
 <button class="wide-action" id="resetHomeIconButton">恢复默认桌面图标</button>
-<div class="panel-section">关于 · v5</div>
+<div class="panel-section">关于 · v6</div>
 <p class="local-note"><strong>网站负责提供程序，课表数据只留在用户自己的设备里。</strong><br>支持烟台大学 URP 教务系统、杭州医学院正方教务系统。<br>第一周周一默认为 2026/8/31。18:00–次日 6:00 自动切换暗色主题。</p>
 </aside>
 <input type="file" id="htmlFileInput" accept="text/html,.html,.htm" hidden>
@@ -55,6 +56,7 @@
 <script src="appearance.js"></script>
 <script src="app.js"></script>
 <script src="v5.js"></script>
+<script src="v6.js"></script>
 <script>
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   window.addEventListener('load', () => {
