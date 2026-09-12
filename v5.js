@@ -37,6 +37,6 @@ function setTheme(dark){document.documentElement.classList.toggle('dark-theme',d
 function applyAutoTheme(){const override=readThemeOverride();setTheme(override?override.dark:scheduledDark())}
 function bindThemeToggle(){const button=$('#jumpToday');if(!button)return;button.onclick=()=>{const dark=!document.documentElement.classList.contains('dark-theme');localStorage.setItem(THEME_OVERRIDE_KEY,JSON.stringify({dark,until:nextThemeBoundary()}));setTheme(dark)}}
 function initAutoTheme(){installExtraStyles();installLineIcons();installTutorial();bindThemeToggle();applyAutoTheme();window.addEventListener('pageshow',applyAutoTheme);document.addEventListener('visibilitychange',()=>{if(!document.hidden)applyAutoTheme()});setInterval(applyAutoTheme,60000)}
-bindDeleteBoard();bindNewBoardDefault();bindTwelveSectionLimit();initAutoTheme();
+bindDeleteBoard();bindNewBoardDefault();initAutoTheme();
 if(migrateFirstDay())setTimeout(()=>location.reload(),0);
 })();
