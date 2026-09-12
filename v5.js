@@ -20,9 +20,9 @@ function limitSelectOptions(root=document){root.querySelectorAll?.('.slot-start,
 function limitTimeEditor(){const box=$('#timeEditor');if(!box)return;[...box.children].slice(MAX_SECTIONS).forEach(node=>node.remove())}
 function enforceTwelveSections(){enforceScheduleRows();limitSelectOptions();limitTimeEditor()}
 function bindTwelveSectionLimit(){const schedule=$('#schedule');const slots=$('#slotList');const times=$('#timeEditor');const observer=new MutationObserver(()=>queueMicrotask(enforceTwelveSections));if(schedule)observer.observe(schedule,{childList:true});if(slots)observer.observe(slots,{childList:true,subtree:true});if(times)observer.observe(times,{childList:true});window.addEventListener('resize',enforceTwelveSections);document.addEventListener('click',()=>queueMicrotask(enforceTwelveSections));enforceTwelveSections()}
-function installThemeStyles(){if(document.querySelector('link[data-kejian-theme]'))return;const link=document.createElement('link');link.rel='stylesheet';link.href='./theme.css';link.dataset.kejianTheme='1';document.head.append(link)}
+function installExtraStyles(){for(const [href,key] of [['./theme.css','theme'],['./course-density.css','course-density']]){if(document.querySelector(`link[data-kejian-${key}]`))continue;const link=document.createElement('link');link.rel='stylesheet';link.href=href;link.dataset[`kejian${key.split('-').map(x=>x[0].toUpperCase()+x.slice(1)).join('')}`]='1';document.head.append(link)}}
 function applyAutoTheme(){const hour=new Date().getHours();const dark=hour>=18||hour<6;document.documentElement.classList.toggle('dark-theme',dark);const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=dark?'#0f172a':'#eaf0fb'}
-function initAutoTheme(){installThemeStyles();applyAutoTheme();window.addEventListener('pageshow',applyAutoTheme);document.addEventListener('visibilitychange',()=>{if(!document.hidden)applyAutoTheme()});setInterval(applyAutoTheme,60000)}
+function initAutoTheme(){installExtraStyles();applyAutoTheme();window.addEventListener('pageshow',applyAutoTheme);document.addEventListener('visibilitychange',()=>{if(!document.hidden)applyAutoTheme()});setInterval(applyAutoTheme,60000)}
 bindDeleteBoard();bindNewBoardDefault();bindTwelveSectionLimit();initAutoTheme();
 if(migrateFirstDay())setTimeout(()=>location.reload(),0);
 })();
